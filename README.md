@@ -24,6 +24,13 @@ The platform uses deep learning–based image classification and pickup-time pri
 
 ---
 
+## 🔮 Future Enhancements
+- Live notifications for NGOs
+- Cloud deployment
+- Mobile-friendly UI
+- Email/WhatsApp alerts
+
+
 ## ⚙️ How to Run Locally
 
 ```bash
@@ -33,3 +40,5 @@ python -m venv venv
 venv\Scripts\activate   # Windows
 pip install -r requirements.txt
 python app.py
+
+ 
