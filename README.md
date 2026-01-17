@@ -1,7 +1,7 @@
 # 🍽️ Food Waste Management System (AI Powered)
 
-A full-stack web application designed to reduce food wastage by connecting mess owners with NGOs.  
-The system integrates AI-based food image classification to help prioritize food distribution efficiently.
+An AI-powered full-stack web application that reduces food waste by connecting mess owners with NGOs. 
+The platform uses deep learning–based image classification and pickup-time prioritization to enable efficient food redistribution.
 
 ---
 
