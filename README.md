@@ -30,6 +30,17 @@ The platform uses deep learning–based image classification and pickup-time pri
 - Mobile-friendly UI
 - Email/WhatsApp alerts
 
+---
+
+## 📦 Large Files Note
+
+Due to GitHub file size limitations, the trained model file (`food_waste_model.h5`) and dataset are not included in this repository.
+
+- The dataset was used for training a CNN-based image classification model.
+- The model can be retrained using `train_model.py`.
+- Users can generate the model locally by running the training script.
+
+This approach follows standard practices for managing large ML assets.
 
 ## ⚙️ How to Run Locally
 
