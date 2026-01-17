@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}NGO Dashboard | Food Waste Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Food Posts -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white fw-bold">
+            Available Food Posts
+        </div>
+        <div class="card-body">
+            {% if alerts %}
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-success">
+                        <tr>
+                            <th>#</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Location</th>
+                            <th>Posted By (Mess ID)</th>
+                            <th>Status</th>
+                            <th>Date Posted</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for alert in alerts %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ alert.description }}</td>
+                            <td>{{ alert.quantity }}</td>
+                            <td>{{ alert.location }}</td>
+                            <td>{{ alert.posted_by }}</td>
+                            <td>
+                                {% if alert.collected %}
+                                    <span class="badge bg-secondary">Collected</span>
+                                {% else %}
+                                    <span class="badge bg-success">Available</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ alert.date_posted.strftime("%d-%m-%Y %H:%M") }}</td>
+                            <td>
+                                {% if alert.collected %}
+                                    <button class="btn btn-sm btn-secondary" disabled>Collected</button>
+                                {% else %}
+                                    <form method="POST" action="{{ url_for('collect_alert', alert_id=alert.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            ✅ Collect
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-muted">No available food posts at the moment.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

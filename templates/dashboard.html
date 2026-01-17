@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | Food Waste Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f5f6fa;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background: #2f80ed;
+        }
+        .navbar-brand {
+            color: #fff !important;
+            font-weight: bold;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">🍽️ Food Waste Management</a>
+        <div class="d-flex">
+            <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h3 class="mb-4">Welcome, {{ session['username'] }} 👋</h3>
+
+    {% if session['role'] == 'mess' %}
+        <!-- Mess Owner Dashboard -->
+        <div class="card p-4 mb-4">
+            <h5 class="mb-3 text-primary">➕ Add Food Availability</h5>
+            <form method="POST" action="{{ url_for('add_food') }}">
+                <div class="mb-3">
+                    <label class="form-label">Food Description</label>
+                    <input type="text" class="form-control" name="food_desc" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Quantity (in plates)</label>
+                    <input type="number" class="form-control" name="quantity" required>
+                </div>
+                <button type="submit" class="btn btn-success">Post Food</button>
+            </form>
+        </div>
+
+        <div class="card p-4">
+            <h5 class="mb-3 text-primary">📋 My Food Posts</h5>
+            {% if foods %}
+                <table class="table table-hover">
+                    <thead class="table-success">
+                        <tr>
+                            <th>#</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Date Posted</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for food in foods %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ food.description }}</td>
+                            <td>{{ food.quantity }}</td>
+                            <td><span class="badge bg-success">Available</span></td>
+                            <td>{{ food.date_posted.strftime("%d-%m-%Y %H:%M") }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('delete_food', food_id=food.id) }}" onsubmit="return confirm('Delete this food post?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">🗑 Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-muted">No food posted yet.</p>
+            {% endif %}
+        </div>
+
+    {% elif session['role'] == 'ngo' %}
+        <!-- NGO Dashboard -->
+        <div class="card p-4">
+            <h5 class="mb-3 text-primary">🥗 Available Food from Mess Owners</h5>
+            {% if foods %}
+                <table class="table table-hover">
+                    <thead class="table-info">
+                        <tr>
+                            <th>#</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Posted By</th>
+                            <th>Date Posted</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for food in foods %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ food.description }}</td>
+                            <td>{{ food.quantity }}</td>
+                            <td>Mess ID: {{ food.posted_by }}</td>
+                            <td>{{ food.date_posted.strftime("%d-%m-%Y %H:%M") }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('request_food', food_id=food.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-success">✅ Request Pickup</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-muted">No food available right now.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

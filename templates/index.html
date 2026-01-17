@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Home | Food Waste Management{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="text-center p-5 bg-light rounded shadow-sm">
+    <h1 class="display-4 fw-bold text-success">♻️ Food Waste Management System</h1>
+    <p class="lead mt-3">
+        Connecting hostels, mess owners, and NGOs to reduce food waste 
+        and help the needy.
+    </p>
+    <div class="mt-4">
+        {% if 'user_id' not in session %}
+            <a href="{{ url_for('signup') }}" class="btn btn-success btn-lg me-2">
+                <i class="bi bi-person-plus"></i> Get Started
+            </a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-success btn-lg">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+        {% else %}
+            {% if session['role'] == 'mess' %}
+                <a href="{{ url_for('mess_dashboard') }}" class="btn btn-success btn-lg">
+                    <i class="bi bi-speedometer2"></i> Go to Dashboard
+                </a>
+            {% else %}
+                <a href="{{ url_for('ngo_dashboard') }}" class="btn btn-success btn-lg">
+                    <i class="bi bi-speedometer2"></i> Go to Dashboard
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mt-5 text-center">
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h3 class="text-success"><i class="bi bi-shop"></i> For Mess Owners</h3>
+                <p>Post food availability in real-time and prevent food wastage by notifying NGOs nearby.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h3 class="text-success"><i class="bi bi-building"></i> For NGOs</h3>
+                <p>Get instant alerts about surplus food and collect it for distribution to the needy.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h3 class="text-success"><i class="bi bi-globe"></i> Our Mission</h3>
+                <p>Reduce hunger and food waste by building a bridge between food donors and NGOs.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="text-center mt-5">
+    <h2 class="fw-bold text-success">Join the Movement 💚</h2>
+    <p class="mb-3">Together, we can ensure no food goes to waste.</p>
+    <a href="{{ url_for('signup') }}" class="btn btn-lg btn-success">
+        <i class="bi bi-person-plus-fill"></i> Sign Up Now
+    </a>
+</div>
+{% endblock %}
