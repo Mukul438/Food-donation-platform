@@ -1,0 +1,22 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Database
+instance/
+*.db
+
+# Dataset (large files)
+dataset/
+
+# ML model file
+food_waste_model.h5
+
+# VS Code settings
+.vscode/
+
+# OS files
+.DS_Store
