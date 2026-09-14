@@ -15,6 +15,7 @@
                     <thead class="table-success">
                         <tr>
                             <th>#</th>
+                            <th>Image</th>
                             <th>Description</th>
                             <th>Quantity</th>
                             <th>Location</th>
@@ -28,6 +29,18 @@
                         {% for alert in alerts %}
                         <tr>
                             <td>{{ loop.index }}</td>
+                            <td>
+    {% if alert.image_filename %}
+        <img src="{{ url_for('static', filename='uploads/' + alert.image_filename) }}"
+             alt="Food Image"
+             width="100"
+             height="80"
+             class="rounded"
+             style="object-fit: cover;">
+    {% else %}
+        <span class="text-muted">No image</span>
+    {% endif %}
+</td>
                             <td>{{ alert.description }}</td>
                             <td>{{ alert.quantity }}</td>
                             <td>{{ alert.location }}</td>

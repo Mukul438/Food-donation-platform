@@ -20,3 +20,6 @@ food_waste_model.h5
 
 # OS files
 .DS_Store
+
+# Uploaded food images
+static/uploads/

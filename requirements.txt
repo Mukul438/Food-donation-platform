@@ -1,7 +1,10 @@
-flask 
-tensorflow 
-scikit-learn 
-pandas 
-numpy 
-matplotlib 
-pillow 
+Flask
+Flask-SQLAlchemy
+gunicorn
+tensorflow
+scikit-learn
+pandas
+numpy
+matplotlib
+Pillow
+Werkzeug
