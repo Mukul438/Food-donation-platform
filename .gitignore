@@ -12,9 +12,6 @@ instance/
 # Dataset
 dataset/
 
-# Large trained model
-food_waste_model.h5
-
 # VS Code
 .vscode/
 
