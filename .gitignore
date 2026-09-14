@@ -1,0 +1,22 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# SQLite database
+instance/
+*.db
+
+# Dataset
+dataset/
+
+# Large trained model
+food_waste_model.h5
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
