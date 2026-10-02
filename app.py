@@ -282,8 +282,12 @@ def ai_classifier():
 
     return render_template("ai_classifier.html", prediction=prediction, image_path=template_image_path)
 
+# ---------- Database Initialization ----------
+
+with app.app_context():
+db.create_all()
+
 # ---------- Run ----------
-if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
+
+if **name** == "**main**":
+app.run(debug=True)
