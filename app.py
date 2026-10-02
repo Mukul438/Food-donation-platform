@@ -283,9 +283,9 @@ def ai_classifier():
     return render_template("ai_classifier.html", prediction=prediction, image_path=template_image_path)
 
 # ---------- Database Initialization ----------
-
 with app.app_context():
-db.create_all()
+    db.create_all()
+
 
 # ---------- Run ----------
 
