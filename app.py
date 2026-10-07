@@ -1,4 +1,5 @@
 # app.py (updated)
+import uuid
 import os
 import time
 import logging
@@ -112,51 +113,85 @@ def logout():
     return redirect(url_for("index"))
 
 # Mess Dashboard
+
 @app.route("/mess_dashboard", methods=["GET", "POST"])
 def mess_dashboard():
     if "role" not in session or session["role"] != "mess":
         return redirect(url_for("login"))
 
     if request.method == "POST":
+        logging.info("UPLOAD: Request received")
+
         file = request.files.get("image")
 
         if not file or file.filename == "":
-            flash("⚠️ Food image is required for AI prediction!", "danger")
+            flash("Please select a food image.", "danger")
             return redirect(url_for("mess_dashboard"))
 
-        # Save image
-        filename = secure_filename(file.filename)
+        if not allowed_file(file.filename):
+            flash("Invalid image format. Use PNG, JPG or JPEG.", "danger")
+            return redirect(url_for("mess_dashboard"))
+
+        if model is None:
+            logging.error("UPLOAD: AI model is not available")
+            flash("AI model is not available.", "danger")
+            return redirect(url_for("mess_dashboard"))
+
+        filename = f"{uuid.uuid4().hex}_{secure_filename(file.filename)}"
         image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-        file.save(image_path)
 
-        # AI Prediction
-        img = image.load_img(image_path, target_size=(128, 128))
-        img_array = image.img_to_array(img) / 255.0
-        img_array = np.expand_dims(img_array, axis=0)
+        try:
+            logging.info("UPLOAD: Saving image")
+            file.save(image_path)
 
-        preds = model.predict(img_array)
-        predicted_class = class_labels[np.argmax(preds)]
+            logging.info("UPLOAD: Image saved. Preparing image")
+            img = image.load_img(image_path, target_size=(128, 128))
+            img_array = image.img_to_array(img) / 255.0
+            img_array = np.expand_dims(img_array, axis=0)
 
-        # Create food alert WITH AI result
-        alert = FoodAlert(
-            description=request.form["description"],
-            quantity=request.form["quantity"],
-            location=request.form["location"],
-            image_filename=filename,
-            prediction=predicted_class,
-            posted_by=session["user_id"]
-        )
+            logging.info("UPLOAD: Starting TensorFlow prediction")
 
-        db.session.add(alert)
-        db.session.commit()
+            preds = model.predict(img_array, verbose=0)
 
-        flash(f"✅ Food posted with AI category: {predicted_class}", "success")
+            logging.info("UPLOAD: Prediction completed")
+
+            predicted_class = class_labels[int(np.argmax(preds))]
+
+            alert = FoodAlert(
+                description=request.form.get("description", ""),
+                quantity=request.form.get("quantity", ""),
+                location=request.form.get("location", ""),
+                image_filename=filename,
+                prediction=predicted_class,
+                posted_by=session["user_id"]
+            )
+
+            db.session.add(alert)
+            db.session.commit()
+
+            logging.info("UPLOAD: Food alert saved successfully")
+
+            flash(
+                f"Food posted successfully! AI category: {predicted_class}",
+                "success"
+            )
+
+        except Exception:
+            db.session.rollback()
+            logging.exception("UPLOAD: Image processing failed")
+
+            if os.path.exists(image_path):
+                os.remove(image_path)
+
+            flash("Unable to process image. Please try again.", "danger")
+
         return redirect(url_for("mess_dashboard"))
 
-    alerts = FoodAlert.query.filter_by(posted_by=session["user_id"]).all()
+    alerts = FoodAlert.query.filter_by(
+        posted_by=session["user_id"]
+    ).all()
+
     return render_template("mess_dashboard.html", alerts=alerts)
-
-
 # NGO Dashboard
 @app.route("/ngo_dashboard")
 def ngo_dashboard():
